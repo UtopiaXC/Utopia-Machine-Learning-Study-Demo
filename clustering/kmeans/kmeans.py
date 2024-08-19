@@ -22,12 +22,14 @@ if not os.path.exists(storage_path):
 # index 2 is for centroid and note that it is just used in clustering, initial is meaningless
 data_size = (40, 3)
 data_sets = []
+
 # Create three crossed cluster
 for i in range(data_generator_count):
     data_sets.append(np.random.randint(data_generator_bounds[i][0], data_generator_bounds[i][1], size=data_size))
 data_set = data_sets[0]
 for i in range(data_generator_count - 1):
     data_set = np.concatenate((data_set, data_sets[i + 1]), axis=0)
+
 # Create origin plt
 plt.scatter(data_set[:, 0], data_set[:, 1], s=20)
 locator = MultipleLocator(5)
@@ -51,19 +53,23 @@ def calculate_distance(point1, point2):
 # Random find three points as centroids
 centroids = random.sample(data_set.tolist(), centroids_count)
 
+# Iterate until centroids be stable or touch the limit of loop.
 for control_flag in range(0, loop_limit, 1):
     print("Clustering, Loop " + str(control_flag + 1))
     centroid_is_changed = False
+
+    # Traverse the data set and find the closest centroid for each coordinate thus putting them in different cluster.
+    # Note that the clustering result will storage into index 2 of data set
     for data in data_set:
         distances = []
         for centroid in centroids:
             distances.append(calculate_distance(data, centroid))
         min_distance = min(distances)
-
         for index in range(0, len(centroids), 1):
             if distances[index] == min_distance:
                 data[2] = index
 
+    # Calculate new centroids by all coordinates in each cluster and stop the loop when the centroids are stable.
     for index in range(0, len(centroids), 1):
         coordinates = []
         for data in data_set:
@@ -82,6 +88,7 @@ for control_flag in range(0, loop_limit, 1):
         print("Centroid converged! Loop stopped.")
         break
 
+# Create result plt
 result = [list() for i in range(centroids_count)]
 for data in data_set:
     result[int(data[2])].append(data.tolist())
