@@ -7,8 +7,9 @@ from matplotlib.pyplot import MultipleLocator
 # Configs
 loop_limit = 1000
 centroids_count = 3
-data_generator_count = 3
-data_generator_bounds = [(10, 60), (25, 75), (40, 90)]
+data_generator_set_count = 3
+data_generator_data_for_each_count_count = 50
+data_generator_bounds = [(10, 50), (30, 70), (50, 90)]
 # data_generator_bounds = [(0, 100), (0, 100), (0, 100)]
 storage_path = './out'
 
@@ -20,14 +21,14 @@ if not os.path.exists(storage_path):
 # index 0 is for x-axis
 # index 1 is for y-axis
 # index 2 is for centroid and note that it is just used in clustering, initial is meaningless
-data_size = (40, 3)
+data_size = (data_generator_data_for_each_count_count, 3)
 data_sets = []
 
 # Create three crossed cluster
-for i in range(data_generator_count):
+for i in range(data_generator_set_count):
     data_sets.append(np.random.randint(data_generator_bounds[i][0], data_generator_bounds[i][1], size=data_size))
 data_set = data_sets[0]
-for i in range(data_generator_count - 1):
+for i in range(data_generator_set_count - 1):
     data_set = np.concatenate((data_set, data_sets[i + 1]), axis=0)
 
 # Create origin plt
