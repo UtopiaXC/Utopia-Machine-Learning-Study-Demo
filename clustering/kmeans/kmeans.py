@@ -31,6 +31,9 @@ data_set = data_sets[0]
 for i in range(data_generator_set_count - 1):
     data_set = np.concatenate((data_set, data_sets[i + 1]), axis=0)
 
+for data in data_set:
+    data[2] = -1
+
 # Create origin plt
 plt.scatter(data_set[:, 0], data_set[:, 1], s=20)
 locator = MultipleLocator(5)
@@ -41,7 +44,7 @@ plt.xlim(0, 100)
 plt.ylim(0, 100)
 plt.grid()
 plt.title("Random points without clustering")
-plt.savefig("./out/kmeans_origin.png")
+plt.savefig("./out/kmeans_origin.png",dpi=300)
 # plt.show()
 plt.close()
 
@@ -106,8 +109,9 @@ legends = []
 for i in range(centroids_count):
     legends.append("Cluster " + str(i + 1))
 legends.append("Centroids")
+plt.title("Clustered by K-MEANS")
 plt.legend(legends)
 plt.grid()
-plt.savefig("./out/kmeans_result.png")
+plt.savefig("./out/kmeans_result.png",dpi=300)
 # plt.show()
 plt.close()
