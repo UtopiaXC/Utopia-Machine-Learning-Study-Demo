@@ -5,12 +5,18 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import MultipleLocator
 
 # Configs
+
+# This algorithm will repeat to find new centroid for each cluster.
+# In case of endless loop while cluster centroid is not stable, needs to set a loop limit to stop clustering.
 loop_limit = 1000
+# Count of cluster will be clustered.
 centroids_count = 3
+# Following params are for generating origin data set.
 data_generator_set_count = 3
 data_generator_data_for_each_count_count = 50
 data_generator_bounds = [(10, 50), (30, 70), (50, 90)]
 # data_generator_bounds = [(0, 100), (0, 100), (0, 100)]
+# This path is for storaging plot images.
 storage_path = './out'
 
 # Create a path to storage the result
@@ -24,17 +30,16 @@ if not os.path.exists(storage_path):
 data_size = (data_generator_data_for_each_count_count, 3)
 data_sets = []
 
-# Create three crossed cluster
+# Create three crossed clusters
 for i in range(data_generator_set_count):
     data_sets.append(np.random.randint(data_generator_bounds[i][0], data_generator_bounds[i][1], size=data_size))
 data_set = data_sets[0]
 for i in range(data_generator_set_count - 1):
     data_set = np.concatenate((data_set, data_sets[i + 1]), axis=0)
-
 for data in data_set:
     data[2] = -1
 
-# Create origin plt
+# Create origin plot
 plt.scatter(data_set[:, 0], data_set[:, 1], s=20)
 locator = MultipleLocator(5)
 gca = plt.gca()
@@ -44,7 +49,7 @@ plt.xlim(0, 100)
 plt.ylim(0, 100)
 plt.grid()
 plt.title("Random points without clustering")
-plt.savefig("./out/kmeans_origin.png",dpi=300)
+plt.savefig("./out/kmeans_origin.png", dpi=300)
 # plt.show()
 plt.close()
 
@@ -92,7 +97,7 @@ for control_flag in range(0, loop_limit, 1):
         print("Centroid converged! Loop stopped.")
         break
 
-# Create result plt
+# Create result plot
 result = [list() for i in range(centroids_count)]
 for data in data_set:
     result[int(data[2])].append(data.tolist())
@@ -112,6 +117,6 @@ legends.append("Centroids")
 plt.title("Clustered by K-MEANS")
 plt.legend(legends)
 plt.grid()
-plt.savefig("./out/kmeans_result.png",dpi=300)
+plt.savefig("./out/kmeans_result.png", dpi=300)
 # plt.show()
 plt.close()
